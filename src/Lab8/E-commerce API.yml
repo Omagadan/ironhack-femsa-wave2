@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: >-
+    API para gestionar usuarios, pedidos e interacciones de servicio al cliente
+    en un sistema de e-commerce.
+  version: 1.0.0-oas3
+tags:
+  - name: users
+    description: Contains operations and data management capabilities related to user accounts.
+  - name: orders
+    description: Contains operations and data management capabilities related to orders.
+  - name: tickets
+    description: Contains operations and data management capabilities related to tickets.
+servers:
+  - url: https://api.example.com/v1
+    description: Servidor principal de la API
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Obtener lista de usuarios
+      description: Devuelve una lista de todos los usuarios registrados.
+      responses:
+        "200":
+          description: Lista de usuarios obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          description: Error en el servidor.
+    post:
+      tags:
+        - users
+      summary: Crear un nuevo usuario
+      description: Permite registrar un nuevo usuario.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Usuario creado exitosamente.
+        "400":
+          description: Datos inválidos.
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Obtener un usuario específico
+      description: Devuelve la información de un usuario dado su ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Información del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Usuario no encontrado.
+    put:
+      tags:
+        - users
+      summary: Actualizar usuario
+      description: Permite actualizar la información de un usuario.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Usuario actualizado exitosamente.
+        "404":
+          description: Usuario no encontrado.
+    delete:
+      tags:
+        - users
+      summary: Eliminar usuario
+      description: Permite eliminar un usuario dado su ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Usuario eliminado exitosamente.
+        "404":
+          description: Usuario no encontrado.
+  /orders:
+    get:
+      tags:
+        - orders
+      summary: Obtener lista de pedidos
+      description: Devuelve todos los pedidos registrados.
+      responses:
+        "200":
+          description: Lista de pedidos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+        "500":
+          description: Error en el servidor.
+    post:
+      tags:
+        - orders
+      summary: Crear un nuevo pedido
+      description: Permite crear un nuevo pedido en el sistema.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "201":
+          description: Pedido creado exitosamente.
+        "400":
+          description: Datos inválidos.
+  /orders/{orderId}:
+    get:
+      tags:
+        - orders
+      summary: Obtener un pedido específico
+      description: Devuelve la información de un pedido dado su ID.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalles del pedido.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Pedido no encontrado.
+  /tickets:
+    post:
+      tags:
+        - tickets
+      summary: Crear un ticket de soporte
+      description: Permite crear un nuevo ticket de servicio al cliente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Ticket"
+      responses:
+        "201":
+          description: Ticket creado exitosamente.
+        "400":
+          description: Datos inválidos.
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "12345"
+        name:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          example: juan.perez@example.com
+        address:
+          type: string
+          example: Calle Falsa 123, Ciudad
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-05-01T10:00:00Z"
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: A1001
+        userId:
+          type: string
+          example: "12345"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: P123
+              quantity:
+                type: integer
+                example: 2
+              price:
+                type: number
+                format: float
+                example: 199.99
+        totalAmount:
+          type: number
+          format: float
+          example: 399.98
+        status:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+          example: pending
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-05-01T10:00:00Z"
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          example: T1001
+        userId:
+          type: string
+          example: "12345"
+        subject:
+          type: string
+          example: Problema con el pedido
+        description:
+          type: string
+          example: El producto llegó en mal estado.
+        status:
+          type: string
+          enum:
+            - open
+            - in_progress
+            - resolved
+            - closed
+          example: open
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-05-01T10:00:00Z"
