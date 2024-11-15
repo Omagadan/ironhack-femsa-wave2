@@ -4,7 +4,7 @@
 
 ### Microservicios Identificados:
 
-- \*_Servicio de Administracion de usuarios_: Gestiona usuarios, autenticación y autorización.
+- **User Management Service**: Gestiona usuarios, autenticación y autorización.
 - **Product Catalog Service**: Maneja productos, inventarios y búsqueda.
 - **Order Processing Service**: Administra pedidos, pagos y carritos de compra.
 - **Customer Support Service**: Gestiona tickets de soporte y consultas de clientes.
